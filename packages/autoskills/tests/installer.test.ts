@@ -350,6 +350,28 @@ describe("installSkill", () => {
     ok(result.output.includes("hash mismatch"));
   });
 
+  it("rejects disallowed Archive.zip files before downloading", async () => {
+    const regDir = join(tmp.path, "registry");
+    const projectDir = join(tmp.path, "project");
+    mkdirSync(projectDir, { recursive: true });
+    buildRegistry(regDir, [
+      { name: "archive-skill", source: "owner/repo", files: { "Archive.zip": "zip" } },
+    ]);
+    rmSync(join(regDir, "archive-skill"), { recursive: true, force: true });
+    _setRegistryDir(regDir);
+
+    const result = await installSkill("owner/repo/archive-skill", [], {
+      projectDir,
+      registryDir: regDir,
+      fetchImpl: (async () => {
+        throw new Error("unexpected fetch");
+      }) as typeof fetch,
+    });
+
+    ok(!result.success);
+    ok(result.output.includes("refusing to download disallowed skill archive"));
+  });
+
   it("preserves existing entries in skills-lock.json and sorts keys", async () => {
     const regDir = join(tmp.path, "registry");
     const projectDir = join(tmp.path, "project");
