@@ -173,6 +173,7 @@ function getRegistryRawBaseUrls(opts: InstallOptions): string[] {
 
   return [
     `${DEFAULT_REGISTRY_RAW_BASE_URL_PREFIX}/v${version}/packages/autoskills/skills-registry`,
+    `${DEFAULT_REGISTRY_RAW_BASE_URL_PREFIX}/main/packages/autoskills/skills-registry`,
   ];
 }
 

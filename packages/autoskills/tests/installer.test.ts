@@ -303,6 +303,56 @@ describe("installSkill", () => {
     );
   });
 
+  it("falls back to the main registry mirror when the release registry mirror is missing files", async () => {
+    const regDir = join(tmp.path, "registry");
+    const projectDir = join(tmp.path, "project");
+    mkdirSync(projectDir, { recursive: true });
+    buildRegistry(regDir, [
+      { name: "fallback-skill", source: "owner/repo", files: { "SKILL.md": "# fallback" } },
+    ]);
+    _setRegistryDir(regDir);
+
+    const prevCacheDir = process.env.AUTOSKILLS_CACHE_DIR;
+    process.env.AUTOSKILLS_CACHE_DIR = join(tmp.path, "fallback-main-cache");
+    const seenUrls: string[] = [];
+    try {
+      const result = await installSkill("owner/repo/fallback-skill", [], {
+        projectDir,
+        registryDir: join(tmp.path, "manifest-only"),
+        fetchImpl: (async (url: string | URL | Request) => {
+          const href = typeof url === "string" || url instanceof URL ? String(url) : url.url;
+          seenUrls.push(href);
+          if (href.includes(`/midudev/autoskills/v${PACKAGE_VERSION}/`)) {
+            return new Response("not found", { status: 404, statusText: "Not Found" });
+          }
+          if (href.includes("/midudev/autoskills/main/packages/autoskills/skills-registry/")) {
+            const rel = decodeURIComponent(
+              href.split("/midudev/autoskills/main/packages/autoskills/skills-registry/")[1],
+            );
+            return new Response(readFileSync(join(regDir, rel)));
+          }
+          return fetchFromRegistry(regDir)(url);
+        }) as typeof fetch,
+      });
+
+      ok(result.success, result.output);
+      ok(
+        seenUrls.some((url) =>
+          url.startsWith(
+            "https://raw.githubusercontent.com/midudev/autoskills/main/packages/autoskills/skills-registry/fallback-skill/",
+          ),
+        ),
+      );
+      equal(
+        readFileSync(join(projectDir, ".agents", "skills", "fallback-skill", "SKILL.md"), "utf-8"),
+        "# fallback",
+      );
+    } finally {
+      if (prevCacheDir === undefined) delete process.env.AUTOSKILLS_CACHE_DIR;
+      else process.env.AUTOSKILLS_CACHE_DIR = prevCacheDir;
+    }
+  });
+
   it("creates symlinks for requested agents", async () => {
     const regDir = join(tmp.path, "registry");
     const projectDir = join(tmp.path, "project");
