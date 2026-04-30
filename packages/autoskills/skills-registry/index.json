@@ -6,6 +6,24 @@
     "promptVersion": "1.0.0"
   },
   "skills": {
+    "bun": {
+      "source": "midudev/autoskills",
+      "skillPath": "midudev/autoskills/bun",
+      "commitSha": "local",
+      "files": ["SKILL.md"],
+      "sha256": {
+        "SKILL.md": "c0c362b87424495daf0621a086f9a67dfb1138a0bd27a98d6d4668b3b5b4bc03"
+      },
+      "bundleHash": "358e81e8551652cc63f41c2ea9f727263a25af98ee45c5a81cfb8ae0403157d7",
+      "review": {
+        "status": "approved",
+        "flags": [],
+        "summary": "local curated Bun skill",
+        "model": "gpt-5.4",
+        "promptVersion": "1.0.0",
+        "reviewedAt": "2026-04-30T00:00:00.000Z"
+      }
+    },
     "deploy-to-vercel": {
       "source": "vercel-labs/agent-skills",
       "skillPath": "vercel-labs/agent-skills/deploy-to-vercel",

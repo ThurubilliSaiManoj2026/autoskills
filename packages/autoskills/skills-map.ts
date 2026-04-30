@@ -573,7 +573,7 @@ export const SKILLS_MAP: Technology[] = [
     detect: {
       configFiles: ["bun.lockb", "bun.lock", "bunfig.toml"],
     },
-    skills: ["https://bun.sh/docs"],
+    skills: ["midudev/autoskills/bun"],
   },
   {
     id: "node",

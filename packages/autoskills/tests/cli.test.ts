@@ -255,7 +255,9 @@ describe("CLI", () => {
       writeFile(tmp.path, "bun.lockb");
       const output = run(["--dry-run"], tmp.path);
       ok(output.includes("Bun"));
-      ok(output.includes("https://bun.sh/docs"));
+      ok(output.includes("midudev"));
+      ok(output.includes("bun"));
+      ok(!output.includes("https://bun.sh/docs"));
     });
 
     it("detects Bun from bunfig.toml", () => {
