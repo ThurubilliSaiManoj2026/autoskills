@@ -2,8 +2,8 @@
   "name": "clerk-astro",
   "type": "module",
   "scripts": {
-    "dev": "astro dev",
-    "build": "astro build"
+    "dev": "node init && astro dev",
+    "build": "node init && astro build"
   },
   "dependencies": {
     "astro": "^5.0.0",

@@ -2,8 +2,8 @@
   "name": "vue-basic-auth",
   "private": true,
   "scripts": {
-    "dev": "vite",
-    "build": "vue-tsc && vite build"
+    "dev": "node init && vite",
+    "build": "node init && vue-tsc && vite build"
   },
   "dependencies": {
     "vue": "latest",
