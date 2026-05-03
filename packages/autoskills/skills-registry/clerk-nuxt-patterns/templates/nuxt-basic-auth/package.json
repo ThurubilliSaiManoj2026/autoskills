@@ -2,8 +2,8 @@
   "name": "nuxt-basic-auth",
   "private": true,
   "scripts": {
-    "dev": "nuxt dev",
-    "build": "nuxt build"
+    "dev": "node init && nuxt dev",
+    "build": "node init && nuxt build"
   },
   "dependencies": {
     "nuxt": "latest",
